@@ -19,5 +19,20 @@ services:
       timeout: 5s
       retries: 10
 
+  # Optional: run the whole app in containers with `docker compose --profile app up -d --build`.
+  # Plain `docker compose up -d` starts only the database for local development.
+  app:
+    profiles: ["app"]
+    build: .
+    container_name: atm-simulator-app
+    restart: unless-stopped
+    environment:
+      DATABASE_URL: postgresql://atm:atm@db:5432/atm_simulator
+    ports:
+      - "3000:3000"
+    depends_on:
+      db:
+        condition: service_healthy
+
 volumes:
   atm-db-data:

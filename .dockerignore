@@ -1,0 +1,14 @@
+.git
+.next
+node_modules
+lib/generated
+coverage
+.env
+.env*.local
+.impeccable
+.codegraph
+.playwright-mcp
+odd
+prompt.md
+Dockerfile
+docker-compose.yml
