@@ -1,0 +1,23 @@
+name: atm-simulator
+
+services:
+  db:
+    image: postgres:17-alpine
+    container_name: atm-simulator-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: atm
+      POSTGRES_PASSWORD: atm
+      POSTGRES_DB: atm_simulator
+    ports:
+      - "5432:5432"
+    volumes:
+      - atm-db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U atm -d atm_simulator"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  atm-db-data:
