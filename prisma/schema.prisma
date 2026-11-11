@@ -1,0 +1,45 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../lib/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum CardType {
+  VISA_GOLD
+  AMEX_PLATINUM
+  MASTERCARD_BLACK
+}
+
+enum TransactionType {
+  DEPOSIT
+  WITHDRAWAL
+}
+
+model Account {
+  id           String        @id @default(cuid())
+  cardType     CardType
+  cardHolder   String
+  /// Fictional card number; only the last four digits are ever displayed.
+  cardNumber   String        @unique
+  /// Demo PIN only. This is a simulator with fictional data, not a credential store.
+  pin          String
+  balance      Decimal       @db.Decimal(12, 2)
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+  transactions Transaction[]
+}
+
+model Transaction {
+  id           String          @id @default(cuid())
+  accountId    String
+  account      Account         @relation(fields: [accountId], references: [id], onDelete: Cascade)
+  type         TransactionType
+  amount       Decimal         @db.Decimal(12, 2)
+  balanceAfter Decimal         @db.Decimal(12, 2)
+  createdAt    DateTime        @default(now())
+
+  @@index([accountId, createdAt])
+}
