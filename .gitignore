@@ -1,0 +1,28 @@
+# dependencies
+node_modules/
+
+# next.js
+.next/
+out/
+next-env.d.ts
+*.tsbuildinfo
+
+# build output
+build/
+coverage/
+
+# prisma generated client
+lib/generated/
+
+# environment
+.env
+.env*.local
+
+# tooling and local review artifacts
+.DS_Store
+.codegraph/
+.playwright-mcp/
+.impeccable/config.local.json
+.impeccable/review/
+.impeccable/mocks/
+.impeccable/build/
