@@ -28,21 +28,25 @@ Branch: `feat/atm-simulator` · Delivery: `exception-ok` (greenfield, no remote)
 
 | ID | Specs | Route | Status | Commit / evidence |
 |---|---|---|---|---|
-| T1 setup (config, env, compose db) | S1, S14 | inline | pending | |
-| T2 database (schema, migration + CHECK, seed, db client) | S11, S14 | inline | pending | |
-| T3 domain + API + tests | S6–S9, S12, S13 | inline | pending | |
-| T4 design direction (PRODUCT.md, concept-seed, surface brief) | S2 | inline | pending | |
-| T5 UI part 1 (shell, cards, keypad, welcome, PIN, eject) | S2–S4, S10 | inline | pending | |
-| T6 UI part 2 (menu, balance, withdraw, deposit, receipt, history) | S5–S9, S13 | inline | pending | |
-| T7 Docker app image + compose profile | S14 | inline | pending | |
-| T8 README + DESIGN.md | S16 | inline / documenter subagent | pending | |
-| T9 journey verification, persistence, finish review, independent verifier | S16 | inline + verifier subagent | pending | |
+| T1 setup (config, env, compose db) | S1, S14 | inline | done | 7fea55e · db healthy, npm install clean, prod audit 0 vulns |
+| T2 database (schema, migration + CHECK, seed, db client) | S11, S14 | inline | done | 6353aaa · seed ×2 → 3 accounts; CHECK rejects balance −1 |
+| T3 domain + API + tests | S6–S9, S12, S13 | inline | done | 67315d2 · RED (6 files missing modules) → GREEN 72/72; tsc + eslint clean |
+| T4 design direction (PRODUCT.md, concept-seed, surface brief) | S2 | inline | done | 69d0e39 · user chose The Vault Hall (assigned) |
+| T5 UI part 1 (shell, cards, keypad, welcome, PIN, eject) | S2–S4, S10 | inline | done | 5411914 · browser journey verified |
+| T6 UI part 2 (menu, balance, withdraw, deposit, receipt, history) | S5–S9, S13 | inline | done | 5411914 · 83/83 tests, lint, typecheck, build green |
+| T7 Docker app image + compose profile | S14 | inline | done | 7b38d99 · --profile app serves :3000; data survives restart and down/up |
+| T8 README + DESIGN.md | S16 | inline / documenter subagent | partial | README done; DESIGN.md deferred to the polish iteration |
+| T9 journey verification, persistence, finish review, independent verifier | S16 | inline + verifier subagent | partial | journey + persistence + fresh-clone verified; finish review and independent verifier deferred |
 
 Route evidence: no Writer trigger (units are sequential and depend on each other); verifier required by Risk items 4 (concurrency) and 5 (dependencies/Docker).
 
 ## Log
 
 - **L2 (2026-11-11)** Plan approved. Environment: Node 26.13, npm 11.20, Docker 29.8 (OrbStack started by agent), ports 3000/5432 free, RDD on. npm `latest` of `prisma` is 8.0 RC → pinned 7.10.1; TS `latest` is TS 7 native → pinned 5.9.3. Git identity was unset; repo-local identity set (name `ares`, email from account context) — user may rewrite before pushing.
+- **L3 (2026-11-11)** npm 11 blocks dependency install scripts by default: approved `prisma`, `@prisma/engines`, `esbuild` in `allowScripts` (needed for the schema engine), denied `fsevents` (prebuilt). Package switched to `"type": "module"` to silence Vite's CJS config warning. Race test: 10 × $100 withdrawals on $500 → 5 succeed, balance 0.00, 5 txns.
+- **L4 (2026-11-11)** RDD slice c5f1049..67315d2 assessed high (process boundary in tests/global-setup.ts + escalated item 4). Consent relayed; user chose "Skip this time" → decline invocation ran once (declined_this_candidate). `prompt.md` excluded locally via `.git/info/exclude`.
+- **L5 (2026-11-11, verbatim user correction)** "no te enfoques en perfeccionar la ui, entregame algo funcional y vamos iterando" → finish review, detector pass, DESIGN.md documenter, and independent verifier deferred to the next iteration.
+- **L6 (2026-11-11)** Verified: all 3 cards accept their PIN (200) and reject a wrong one (401); browser journey wrong PIN → correct PIN → withdraw $60 → deposit $250.25 → overdraft rejected → history → eject → welcome; 390px has no horizontal scroll; fresh clone runs the 5 documented commands without .env; balances survive `restart` and `down`/`up`.
 - **L1 (verbatim original request)** — see below.
 
 # Build a Premium ATM Simulator
